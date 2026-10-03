@@ -1,0 +1,21 @@
+version: 1
+project:
+  name: bible-academy
+
+layers:
+  - name: app
+    match: [app/**/*.ts, app/**/*.tsx]
+  - name: components
+    match: [components/**/*.ts, components/**/*.tsx]
+  - name: libraries
+    match: [lib/**/*.ts]
+
+ruleset:
+  app: { mayDependOn: [components, libraries] }
+  components: { mayDependOn: [app, libraries] }
+  libraries: { mayDependOn: [] }
+
+expectations:
+  - name: client-components-do-not-import-server-only
+    expect: { path: components/**/*.tsx }
+    to: { notDependOnPackages: [server-only, '@/lib/supabase-admin'] }
